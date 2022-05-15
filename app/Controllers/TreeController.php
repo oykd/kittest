@@ -68,4 +68,18 @@ class TreeController extends BaseController
             'message' => 'ok',
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
     }
+
+    /**
+     * @param int $route_id
+     * @param array $data
+     * @throws \Exceptions\DBException | \Exceptions\TreeException
+     */
+    public function parent($route_id, $data)
+    {
+        tree::parent($data);
+        echo json_encode([
+            'code' => 0,
+            'message' => 'ok',
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    }
 }

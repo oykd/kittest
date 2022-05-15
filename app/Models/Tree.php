@@ -27,35 +27,57 @@ class Tree extends BaseModel
     /**
      * Загружаем древовидную структуру
      *
-     * @throws \Exceptions\DBException
+     * @throws \Exceptions\DBException | \Exceptions\TreeException
      */
     public static function load()
     {
         // возвращаем узлы дерева
         $leafs = DB::query("SELECT * FROM `" . self::table . "`")->all();
 
-        // добавляем в дерево каждый элемент рекурсивной функцией
-        $tree = [
-            'id' => null,
-            'branches' => [],
-        ];
+        // обрезаем имена, если они слишком длинные
         foreach ($leafs as $leaf) {
-            // обрезаем имя, если оно слишком длинное
             if (mb_strlen($leaf['name']) > static::visibleNameLength) {
                 $leaf['name'] = mb_substr($leaf['name'], 0, static::visibleNameLength);
                 $leaf['name'] = trim($leaf['name']) . '...';
             }
-            static::addToTree($tree, $leaf);
+        }
+
+        $tree = [
+            'id' => null,
+            'branches' => [],
+        ];
+
+        // добавляем в дерево каждый элемент рекурсивной функцией
+        $recursive = [];
+        while (!empty($leafs)) {
+            $leaf = array_shift($leafs);
+
+            // Если элемент встречается повторно и состояние дерева не изменилось
+            // с первой попытки его вставки, то вставить его невозможно
+            if (in_array($leaf, $recursive))
+                throw Fail::endlessRecursion($leaf['id']);
+
+            // если добавить элемент не удалось, переместим его в конец массива
+            if (!self::addToTree($tree, $leaf)) {
+                $leafs[] = $leaf;
+                // добавим элемент в группу, которая может вызвать бесконечный цикл
+                $recursive[] = $leaf;
+            } else {
+                // состояние дерева изменилось
+                $recursive = [];
+            }
         }
 
         return $tree;
     }
 
     /**
+     * Добавляем элемент к дереву, если возможно
      * recursive
      *
      * @param array $tree
      * @param array $leaf
+     * @return bool
      */
     protected static function addToTree(&$tree, $leaf)
     {
@@ -66,10 +88,12 @@ class Tree extends BaseModel
                 'content' => $leaf['content'],
                 'branches' => [],
             ];
-            return;
+            return true;
         }
-        foreach ($tree['branches'] as &$branch)
-            static::addToTree($branch, $leaf);
+        foreach ($tree['branches'] as &$branch) {
+            if (static::addToTree($branch, $leaf)) return true;
+        }
+        return false;
     }
 
     /**
@@ -140,6 +164,8 @@ class Tree extends BaseModel
     }
 
     /**
+     * Получаем элемент по его id
+     *
      * @param array $data
      * @return array
      * @throws \Exceptions\DBException | \Exceptions\TreeException
@@ -149,6 +175,7 @@ class Tree extends BaseModel
         if (!isset($data['id']))
             throw Fail::incorrectParameters();
 
+        // ищем элемент дерева
         $leaf = DB::query("SELECT * FROM `" . self::table . "` WHERE `id` = ? ", $data['id'])->first();
         if (!$leaf)
             throw Fail::idNotFound($data['id']);
@@ -161,5 +188,70 @@ class Tree extends BaseModel
         }
 
         return $leaf;
+    }
+
+    /**
+     * Меняем родителя для элемента
+     *
+     * @param array $data
+     * @throws \Exceptions\DBException | \Exceptions\TreeException
+     */
+    public static function parent($data)
+    {
+        if (!isset($data['id'], $data['parent_id']) || $data['id'] == $data['parent_id'])
+            throw Fail::incorrectParameters();
+
+        // получаем все элементы дерева
+        $leafs = DB::query("SELECT * FROM `tree`")->all();
+
+        // получаем список всех id
+        $idList = array_map(function ($item) {
+            return $item['id'];
+        }, $leafs);
+
+        // проверяем наличие элемента
+        if (!in_array($data['id'], $idList))
+            throw Fail::idNotFound($data['id']);
+
+        // проверяем наличие нового родителя
+        if (!in_array($data['id'], $idList) && $data['parent_id'] != 0)
+            throw Fail::parentIdNotFound($data['parent_id']);
+
+        // проверяем не совпадают ли текущий и новый родители
+        foreach ($leafs as $leaf) {
+            if ($leaf['id'] == $data['id'] && $leaf['parent_id'] == $data['parent_id'])
+                throw Fail::sameParent();
+        }
+
+        // проверяем не является ли новый родитель потомком перемещаемого элемента
+        $descendants = [];
+        self::getDescendants($data['id'], $leafs, $descendants);
+        if (in_array($data['parent_id'], $descendants))
+            throw Fail::incorrectParent($data['id'], $data['parent_id']);
+
+        // сохраняем нового родителя
+        if ($data['parent_id'] == 0) $data['parent_id'] = null;
+        DB::query(
+            "UPDATE `" . self::table . "` SET `parent_id` = ? WHERE `id` = ?",
+            [$data['parent_id'], $data['id']]
+        );
+    }
+
+    /**
+     * Получаем id всех потомков для элемента
+     *
+     * @param int $parent
+     * @param array $leafs
+     * @param $descendants
+     */
+    public static function getDescendants($parent, $leafs, &$descendants)
+    {
+        foreach ($leafs as $leaf) {
+            if (in_array($leaf['id'], $descendants)) continue;
+            if ($leaf['parent_id'] == $parent) {
+                $descendants[] = $leaf['id'];
+                static::getDescendants($leaf['id'], $leafs, $descendants);
+            }
+        }
     }
 }

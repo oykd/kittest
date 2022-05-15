@@ -46,6 +46,7 @@ a:hover {
 
 body {
     background: ghostwhite;
+    position: relative;
 }
 
 #main {
@@ -57,14 +58,18 @@ body {
     margin-right: auto;
     padding-bottom: 50px;
     min-width: 750px;
-    position: relative;
 }
 
 #top {
     padding: 20px;
     background: beige;
     box-sizing: border-box;
-    height: 80px;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
 }
 
 #tree {
@@ -77,11 +82,9 @@ body {
     right: 0;
     top: 80px;
     width: 30%;
-    min-height: 600px;
     background: #dee9fa;
     box-sizing: border-box;
     padding: 20px;
-    position: absolute;
     visibility: hidden;
 }
 
@@ -92,6 +95,15 @@ body {
 }
 
 /* компоненты дерева */
+
+.draggable {
+    position: absolute;
+    display: none;
+    padding: 5px;
+    background: beige;
+    border: gray dotted;
+    opacity: 0.8;
+}
 
 .header {
     background: aliceblue;
@@ -194,6 +206,10 @@ body {
 
 .float-right {
     float: right;
+}
+
+.display-block {
+    display: block;
 }
 
 .clearfix:after {

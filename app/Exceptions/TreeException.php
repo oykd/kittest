@@ -47,4 +47,31 @@ class TreeException extends \Exception
     {
         return new static("Id [$id] not found", 5);
     }
+
+    /**
+     * @param int $id
+     * @return TreeException
+     */
+    public static function endlessRecursion($id)
+    {
+        return new static("Cant insert element [$id] into a Tree", 6);
+    }
+
+    /**
+     * @param int $id
+     * @param int $parent_id
+     * @return TreeException
+     */
+    public static function incorrectParent($id, $parent_id)
+    {
+        return new static("Cant assign new parent [$parent_id] to element [$id] (mutual dependency)", 7);
+    }
+
+    /**
+     * @return TreeException
+     */
+    public static function sameParent()
+    {
+        return new static("Trying to assign same parent", 8);
+    }
 }

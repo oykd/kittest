@@ -75,5 +75,13 @@ return [
         'action' => 'register',
         'id' => 8,
     ],
+    [
+        'roles' => ['admin'],
+        'method' => 'POST',
+        'path' => '/parent',
+        'controller' => TreeController::class,
+        'action' => 'parent',
+        'id' => 9,
+    ],
 
 ];

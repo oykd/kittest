@@ -6,6 +6,9 @@ document.addEventListener("DOMContentLoaded", function () {
         defaultName = "Новый элемент",
         edit = document.getElementById("editor").dataset.edit.toString() === 'yes';
 
+    let
+        moveElement = 0;
+
     // запрос
     const request = (url, method, body, success, error = null) => {
         fetch(url, {
@@ -90,11 +93,27 @@ document.addEventListener("DOMContentLoaded", function () {
         name.id = "name-" + id;
         header.append(name);
 
+        // переместить
+        if (edit) {
+            name.addEventListener("mousedown", function (event) {
+                const
+                    header = event.target.parentElement,
+                    currentLeaf = header.parentElement,
+                    draggable = document.getElementById("draggable");
+                moveElement = currentLeaf.dataset.id;
+                draggable.innerHTML = event.target.innerHTML;
+                draggable.style.left = event.clientX + 10 + "px";
+                draggable.style.top = event.clientY + "px";
+                draggable.classList.remove("display-block");
+            });
+        }
+
         // Редактировать название и контент элемента
         name.addEventListener("click", function (event) {
             const
                 header = event.target.parentElement,
                 currentLeaf = header.parentElement;
+
             request("/tree/" + currentLeaf.dataset.id, "GET", null, (response) => {
                 document.getElementById("editor").style.visibility = "visible";
                 if (edit) {
@@ -234,8 +253,48 @@ document.addEventListener("DOMContentLoaded", function () {
     // добавляем корневой объект
     const root = appendLeaf(document.getElementById("tree"), 0, rootName, 0, true);
 
+    // переместить элемент
+    document.addEventListener("mouseup", function (event) {
+        if (!moveElement) return;
+
+        const
+            draggable = document.getElementById("draggable"),
+            newParent = [event.target, event.target.parentElement, event.target.parentElement.parentElement].find((el) => {
+                return el.dataset.id;
+            }),
+            childSelector = "[data-id='" + moveElement + "']",
+            leaf = document.getElementById("tree").querySelector(childSelector);
+
+        draggable.classList.remove('display-block');
+
+        if (!newParent.dataset.id || newParent.dataset.id === moveElement) {
+            moveElement = 0;
+            return;
+        }
+
+        request("/parent", "POST", {id: moveElement, parent_id: newParent.dataset.id}, () => {
+            newParent.querySelector(".container").appendChild(leaf);
+            if (!newParent.classList.contains("unfold")) {
+                newParent.querySelector(".open").click();
+            }
+        });
+
+        moveElement = 0;
+    });
+    document.addEventListener("mousemove", function (event) {
+        if (!moveElement) return;
+        const draggable = document.getElementById("draggable");
+        if (!draggable.classList.contains("display-block")) {
+            draggable.classList.add("display-block");
+        }
+        draggable.style.left = event.clientX + 12 + "px";
+        draggable.style.top = event.clientY + "px";
+    });
+
     // загружаем дерево
     request("/tree", "GET", null, (response) => {
+
         build(response.tree, root);
     });
+
 });

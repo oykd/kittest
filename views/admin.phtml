@@ -7,14 +7,20 @@
         </div>
     </div>
 
-    <div id="tree">
+    <div class="row">
+
+        <div id="tree" class="float-left">
+        </div>
+
+        <div id="editor" data-edit="yes" class="float-left">
+            <input id="name" title="name" type="text"/>
+            <textarea id="content" title="content"></textarea>
+            <input id="save" title="save" type="button" value="Сохранить">
+            <p id="editor-error"></p>
+        </div>
+
     </div>
 
-    <div id="editor" data-edit="yes">
-        <input id="name" title="name" type="text"/>
-        <textarea id="content" title="content"></textarea>
-        <input id="save" title="save" type="button" value="Сохранить">
-        <p id="editor-error"></p>
-    </div>
+    <div id="draggable" class="draggable"></div>
 
 <?php include "footer.phtml" ?>
