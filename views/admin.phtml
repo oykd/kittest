@@ -1,0 +1,20 @@
+<?php include "header.phtml" ?>
+    <div id="top" class="clearfix">
+        <a href="/">Основная страница</a>
+
+        <div class="float-right">
+            <?php include "register.form.phtml" ?>
+        </div>
+    </div>
+
+    <div id="tree">
+    </div>
+
+    <div id="editor" data-edit="yes">
+        <input id="name" title="name" type="text"/>
+        <textarea id="content" title="content"></textarea>
+        <input id="save" title="save" type="button" value="Сохранить">
+        <p id="editor-error"></p>
+    </div>
+
+<?php include "footer.phtml" ?>

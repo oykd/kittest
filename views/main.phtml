@@ -1,0 +1,27 @@
+<?php include "header.phtml" ?>
+<?php
+/**
+ * @var string|null $name
+ */
+?>
+
+    <div id="top">
+        <?php if (!$name) { ?>
+            <?php include "login.form.phtml" ?>
+        <?php } else { ?>
+            Привет, <?= $name ?>! <a id="logout" href="#">logout</a>
+            <div>
+                <a href="/admin">Редактировать дерево?</a>
+            </div>
+        <?php } ?>
+    </div>
+
+    <div id="tree">
+    </div>
+
+    <div id="editor" data-edit="no">
+        <h3 id="name"></h3>
+        <p id="content"></p>
+    </div>
+
+<?php include "footer.phtml" ?>

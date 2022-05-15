@@ -1,0 +1,203 @@
+
+/* reset */
+html {
+    font-family: sans-serif;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust:     100%;
+}
+
+body {
+    margin: 0;
+}
+
+/* типография */
+
+body,
+button,
+input,
+select,
+textarea {
+    color: #404040;
+    font-family: 'Helvetica', Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+h1, h2, h3 {
+    margin: 0;
+    padding: 1em 0;
+}
+
+p {
+    margin: 0;
+    padding: 1em 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    color: cornflowerblue;
+    text-decoration: underline;
+}
+
+/* структура */
+
+body {
+    background: ghostwhite;
+}
+
+#main {
+    background: white;
+    box-sizing: border-box;
+    max-width: 1200px;
+    min-height: 100vh;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 50px;
+    min-width: 750px;
+    position: relative;
+}
+
+#top {
+    padding: 20px;
+    background: beige;
+    box-sizing: border-box;
+    height: 80px;
+}
+
+#tree {
+    width: 70%;
+    box-sizing: border-box;
+    padding-right: 20px;
+}
+
+#editor {
+    right: 0;
+    top: 80px;
+    width: 30%;
+    min-height: 600px;
+    background: #dee9fa;
+    box-sizing: border-box;
+    padding: 20px;
+    position: absolute;
+    visibility: hidden;
+}
+
+#editor > textarea {
+    margin-top: 10px;
+    width: 100%;
+    height: 300px;
+}
+
+/* компоненты дерева */
+
+.header {
+    background: aliceblue;
+}
+
+.header:hover {
+    background: azure;
+}
+
+.leaf {
+    padding-top: 10px;
+    user-select: none;
+}
+
+.leaf > .bordered {
+    border-left: aliceblue dotted;
+}
+
+.leaf > .bordered:hover {
+    /*border-left: skyblue dotted;*/
+    border-left: #c7e7f1 dotted;
+}
+
+.leaf:hover > .header {
+    background: #c7e7f1;
+}
+
+.leaf {
+    display: none;
+}
+
+.leaf > .add {
+    display: none;
+    width: 150px;
+    margin-top: 10px;
+    background: skyblue;
+}
+
+.leaf > .add:hover {
+    background: lightcoral;
+}
+
+.leaf > .ready-to-add {
+    border-left: lightcoral dotted;
+    /*border-left: skyblue dotted;*/
+}
+
+.leaf .active {
+    background: lightpink !important;
+}
+
+.leaf > .active > .remove {
+    display: block;
+}
+
+.header > .open:hover {
+    background: aquamarine;
+}
+
+.header > .remove {
+    background: lightcoral;
+    float: right;
+    display: none;
+}
+
+.header > .remove:hover {
+    background: coral;
+}
+
+.header > .open {
+    width: 15px;
+}
+
+#tree > .leaf {
+    display: block;
+}
+
+.unfold > .container > .leaf {
+    display: block;
+}
+
+.unfold > .add {
+    display: block;
+}
+
+.name, .button {
+    padding: 4px;
+    cursor: pointer;
+}
+
+.header, .button, .container {
+    transition: 0.3s;
+}
+
+/* helpers */
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
