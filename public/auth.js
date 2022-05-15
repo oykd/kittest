@@ -37,7 +37,7 @@ if (document.getElementById('logout')) {
         })
             .then(response => response.text())
             .then(response => {
-                location.reload();
+                window.location.replace("/");
             })
             .catch((e) => {
                 console.log(e);
