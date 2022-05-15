@@ -198,6 +198,10 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
+        if (level < 8) {
+            container.classList.add("bordered");
+        }
+
         // добавляем созданный элемент к родительскому контейнеру
         if (root) {
             parent.append(leaf);
