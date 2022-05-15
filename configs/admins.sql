@@ -1,5 +1,5 @@
 CREATE TABLE `admins` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id` bigint(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     `login` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
     `password` varchar(255) NOT NULL,
     `session` varchar(255) NOT NULL DEFAULT '',

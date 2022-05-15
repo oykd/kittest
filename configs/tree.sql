@@ -1,6 +1,6 @@
 CREATE TABLE `tree` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `parent_id` int(11) NULL,
+    `id` bigint(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `parent_id` bigint(11) UNSIGNED NULL,
     `name` varchar(255) NOT NULL,
     `content` TEXT COLLATE utf8mb4_general_ci NOT NULL,
     PRIMARY KEY (`id`),

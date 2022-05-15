@@ -35,10 +35,10 @@ class Tree extends BaseModel
         $leafs = DB::query("SELECT * FROM `" . self::table . "`")->all();
 
         // обрезаем имена, если они слишком длинные
-        foreach ($leafs as $leaf) {
-            if (mb_strlen($leaf['name']) > static::visibleNameLength) {
-                $leaf['name'] = mb_substr($leaf['name'], 0, static::visibleNameLength);
-                $leaf['name'] = trim($leaf['name']) . '...';
+        for ($i = 0; $i < count($leafs); $i++) {
+            if (mb_strlen($leafs[$i]['name']) > static::visibleNameLength) {
+                $leafs[$i]['name'] = mb_substr($leafs[$i]['name'], 0, static::visibleNameLength);
+                $leafs[$i]['name'] = trim($leafs[$i]['name']) . '...';
             }
         }
 
@@ -62,6 +62,7 @@ class Tree extends BaseModel
                 $leafs[] = $leaf;
                 // добавим элемент в группу, которая может вызвать бесконечный цикл
                 $recursive[] = $leaf;
+                if ($leaf['id'] == 18) echo '!!!';
             } else {
                 // состояние дерева изменилось
                 $recursive = [];
