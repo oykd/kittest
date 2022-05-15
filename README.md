@@ -39,7 +39,7 @@ login: admin / pass: 12345
 
 Дополнительные комментарии в php коде.  
 
-####Backend:
+### Backend:
 * /app/Application.php - основной класс;
 * /app/Router - марштрутизатор выбирает контроллер в зависимости от URI и роли пользователя;
 * /config/routes.conf.php - настройки марштрутизатора;
@@ -50,7 +50,7 @@ login: admin / pass: 12345
 * /app/DB - классы БД;
 * /public/ - root сайта, видимый извне.
 
-####Frontend:
+### Frontend:
 * /public/auth.js - js для авторизации;
 * /public/tree.js - js для работы с деревом;
 * /public/style.css - стили.
