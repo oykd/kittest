@@ -62,7 +62,6 @@ class Tree extends BaseModel
                 $leafs[] = $leaf;
                 // добавим элемент в группу, которая может вызвать бесконечный цикл
                 $recursive[] = $leaf;
-                if ($leaf['id'] == 18) echo '!!!';
             } else {
                 // состояние дерева изменилось
                 $recursive = [];
