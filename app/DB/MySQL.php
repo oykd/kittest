@@ -23,9 +23,6 @@ final class MySQL implements DBInterface
         'flags' => null,
     ];
 
-    /** @var MySQL */
-    protected static $instance;
-
     /** @var \mysqli */
     protected $link;
 

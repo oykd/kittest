@@ -13,7 +13,7 @@ class TreeController extends BaseController
     /**
      * /tree
      *
-     * @throws \Exceptions\DBException
+     * @throws \Exceptions\DBException | \Exceptions\TreeException
      */
     public function tree()
     {

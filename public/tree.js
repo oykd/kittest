@@ -291,8 +291,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!draggable.classList.contains("display-block")) {
             draggable.classList.add("display-block");
         }
-        draggable.style.left = event.clientX + 12 + "px";
-        draggable.style.top = event.clientY + "px";
+        draggable.style.left = event.pageX + 12 + "px";
+        draggable.style.top = event.pageY + "px";
     });
 
     // загружаем дерево
