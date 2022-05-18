@@ -102,8 +102,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     draggable = document.getElementById("draggable");
                 moveElement = currentLeaf.dataset.id;
                 draggable.innerHTML = event.target.innerHTML;
-                draggable.style.left = event.clientX + 10 + "px";
-                draggable.style.top = event.clientY + "px";
                 draggable.classList.remove("display-block");
             });
         }
